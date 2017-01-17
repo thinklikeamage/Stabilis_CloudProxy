@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <modules>
+        <Stabilis_CloudProxy>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Core />
+                <Stabilis_Core />
+            </depends>
+        </Stabilis_CloudProxy>
+    </modules>
+</config>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <stabilis_cloudproxy translate="title" module="stabilis_cloudproxy">
+                                        <title>Stabilis Cloud Proxy Section</title>
+                                    </stabilis_cloudproxy>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

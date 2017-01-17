@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <modules>
+        <Stabilis_CloudProxy>
+            <version>1.0.0</version>
+        </Stabilis_CloudProxy>
+    </modules>
+    <global>
+        <helpers>
+            <stabilis_cloudproxy>
+                <class>Stabilis_CloudProxy_Helper</class>
+            </stabilis_cloudproxy>
+        </helpers>
+        <models>
+            <stabilis_cloudproxy>
+                <class>Stabilis_CloudProxy_Model</class>
+            </stabilis_cloudproxy>
+        </models>
+    </global>
+    <default>
+        <stabilis_cloudproxy>
+            <internal>
+                <api_endpoint><![CDATA[https://waf.sucuri.net/api]]></api_endpoint>
+                <api_useragent><![CDATA[Mozilla/5.0 (compatible; Stabilis-Cloud-Proxy-Magento-Plugin/%s)]]></api_useragent>
+            </internal>
+        </stabilis_cloudproxy>
+    </default>
+</config>

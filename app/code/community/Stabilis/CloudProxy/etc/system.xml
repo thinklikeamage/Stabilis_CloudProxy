@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <sections>
+        <stabilis_cloudproxy translate="label" module="stabilis_cloudproxy">
+            <label>Stabilis Cloud Proxy</label>
+            <tab>stabilis</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>3000</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label comment">
+                            <label>Enable</label>
+                            <comment>You will still need to set up your CloudProxy account with Sucuri.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1000</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <api_key translate="label comment">
+                            <label>API Key</label>
+                            <comment></comment>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <validate>required-entry validate-hex32</validate>
+                            <sort_order>2000</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </api_key>
+                        <secret_key translate="label comment">
+                            <label>Secret Key</label>
+                            <comment></comment>
+                            <frontend_type>obscure</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <validate>required-entry validate-hex32</validate>
+                            <sort_order>3000</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </secret_key>
+                    </fields>
+                </general>
+            </groups>
+        </stabilis_cloudproxy>
+    </sections>
+</config>
+<!--
+
+CloudProxy API
+
+    API Key (for plugin): 3c92d5e7f5b8d94169afab9ef6e37abf/b0d640074399a0f295b9dc6e9d294d38 regenerate
+    API Key (API_KEY): 3c92d5e7f5b8d94169afab9ef6e37abf
+    API Key (API_SECRET): b0d640074399a0f295b9dc6e9d294d38
+
+API v1 (intro)
+
+We are currently maintaining two versions of our API, the first (and original) version provides a way to clear the cache of your site, whitelist your current IP address, and get the latest audit logs from your account. You can copy the link of the buttons displayed here and create a bookmark in your browser to execute these actions whenever you want without the need to access this dashboard.
+
+If you want to give a try to the new API v2 keep scrolling.
+
+API v2 (intro)
+
+With the introduction of the new code for the CloudProxy API the structure of the responses was unified and now all of them are JSON-encoded. Every request you send will be responded with the same same attributes and only the values will be changed when your request is executed successfully.
+Attribute 	Type 	Description
+status 	boolean 	Either a one or a zero. This property indicates the success or fail of the operation, you will find an explanation of this accessing the messages property and looping through all the messages added there (if not empty).
+messages 	[]string 	A list of messages collected through the execution of the action specified in the request.
+action 	string 	The official name of the action executed, the old action names from the first API version will be available in this one but is recommended to change them and start using the values returned in this attribute.
+request_time 	timestamp 	The Unix Time of the moment when the request reached our servers.
+verbose 	boolean 	Either a one or a zero. This property indicates the state of the verbosing for the responses, you can modify it adding a verbose parameter in the request to force the return of the output object instead of all the response properties.
+output 	[]object 	If the request was processed by the API successfully then this attribute will be filled with data resulting from the operation executed internally by our services. If status is reporting an error then this attribute will be returned as empty.
+property 	string 	This is not a property of the response but a parameter that you can use to filter the result of the operation and the data returned after you send the request. If set, this parameter will cause the response to be simplified automatically without the use of the parameter verbose and if the string passed as the value is found as an attribute of the output object then it will be shown in the response, if not found a null will be returned instead.
+{
+  'status': boolean,
+  'messages': []string,
+  'action': string,
+  'request_time': timestamp,
+  'verbose': boolean,
+  'output': []object
+}
+API v2 (Clear Cache)
+
+This option can be used to clear CloudProxy cache after any website changes have been made. This will reflect live as soon as you click the clear cache button.
+curl 'https://waf.sucuri.net/api?v2' \
+  --data 'k=API_KEY' \
+  --data 's=API_SECRET' \
+  --data 'a=clear_cache'
+API v2 (Clear Cache) on specific files
+
+This option can be used to clear CloudProxy cache on specific files/folders. This will reflect live as soon as you click the clear cache button.
+curl 'https://waf.sucuri.net/api?v2' \
+  --data 'k=API_KEY' \
+  --data 's=API_SECRET' \
+  --data 'a=clear_cache' \
+  --data 'file=/clear/this.php'
+API v2 (Whitelist IP)
+
+This action allows you to whitelist your current IP address so you won't be blocked by some of our security rules. You will also have access your admin panels if you have it restricted to only trusted IP Addresses on the security settings. By default this endpoint will whitelist the IP address associated to the HTTP request of the client, if you want to specify a custom IP you have to pass the parameter ip with a valid IPv4 address.
+curl 'https://waf.sucuri.net/api?v2' \
+  --data 'k=API_KEY' \
+  --data 's=API_SECRET' \
+  --data 'a=whitelist_ip' \
+  --data 'ip=127.0.0.1'
+API v2 (Show Settings)
+
+This action allows you to retrieve from our service your current account settings for the domain associated with the API Key passed in the request. Note that not all the settings of your account will be returned only the ones that we consider as public data.
+
+Current public account settings:
+Option 	Type 	Description
+domain 	string 	The domain of the site.
+proxy_active 	integer 	One if the service is active, zero otherwise.
+internal_ip_main 	string 	The main internal IP address of the site.
+security_level 	string 	The security level chosen for your site.
+cache_mode 	string 	The caching level chosen for your site.
+admin_access 	string 	Whether the admin area is protected or not.
+comment_access 	string 	Status for XMLRPC, comments and trackbacks requests.
+whitelist_list 	[]string 	A list with all the whitelisted IP addresses so far.
+blacklist_list 	[]string 	A list with all the blacklisted IP addresses so far.
+curl 'https://waf.sucuri.net/api?v2' \
+  --data 'k=API_KEY' \
+  --data 's=API_SECRET' \
+  --data 'a=show_settings'
+API v2 (Audit Trails)
+
+This action allows you to retrieve the latest audit log entries caught by our service, you will get a dump of all the blocked events for the date specified (or for the current day if you don't specify this parameter) allowing you to integrate our data in your own dashboard.
+
+Note. The parameters date, query, offset and limit are optionals and currently they are not fully implemented so if you have an issue with one of them please report it to our development team.
+curl 'https://waf.sucuri.net/api?v2' \
+  --data 'k=API_KEY' \
+  --data 's=API_SECRET' \
+  --data 'a=audit_trails' \
+  --data 'date=yyyy-mm-dd' \
+  --data 'query=Lorem+ipsum+dolor' \
+  --data 'offset=0' \
+  --data 'limit=50'
+
+-->
